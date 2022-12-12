@@ -43,7 +43,7 @@ app.use((req, res, next) => {
     "Access-Control-Allow-Methods",
     "GET, POST, PUT, PATCH, DELETE"
   );
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization", );
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization", "Access-Control-Allow-Origin");
   next();
 });
 
@@ -63,6 +63,10 @@ mongoose
     "mongodb+srv://m:ZBpLoaQ6UcHed5ho@cluster0.avjb12c.mongodb.net/messages?retryWrites=true&w=majority"
   )
   .then((result) => {
-    app.listen(8000);
+    const server = app.listen(8000);
+    const io = require("./socket").init(server);
+    io.on('connection', socket => {
+      console.log("client connected")
+    })
   })
   .catch((err) => console.log(err));
